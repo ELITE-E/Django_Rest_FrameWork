@@ -29,3 +29,26 @@ you can create urls within it
 ---
 cd cfehome/urls.py ==>include the url above inside its urlpatterns 
 ---
+......Django models are Python classes that define the structure and behavior of data within a Django application. They serve as the single, definitive source of information about the data being stored, and generally, each model corresponds to a single database table....
+(from model creations)
+Use CharField when you need to store a string with a clearly defined maximum length, and you want that length enforced.
+Use TextField when you need to store potentially very long text and do not want to impose a strict length limit at the database level.
+-----
+run python manage.py makemigrations to generate migration files that describe these changes
+-----
+run pyhton manage.py migrate to apply these changes to the db 
+----
+(man ==we open the python shell to input the data)
+---
+run python manage.py shell to open the shell
+---
+===serializers in DRF====
+Django serializers, particularly within the context of Django REST Framework (DRF), serve as a crucial component for converting complex data types (like Django model instances or querysets) into native Python datatypes (such as dictionaries and lists). These native datatypes can then be easily rendered into formats like JSON or XML for API responses, or parsed from incoming requests
+
+Data Transformation: Facilitates the conversion between Python objects and various data formats (JSON, XML).
+
+Data Validation: Provides a robust mechanism for validating incoming data, ensuring data integrity before saving to the database.
+
+API Control: Offers a flexible way to control the output format and content of your API responses.
+
+Reduced Boilerplate: ModelSerializer significantly reduces the amount of code needed for common serialization tasks.
