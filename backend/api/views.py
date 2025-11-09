@@ -7,16 +7,26 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from products.models import Product
+from products.serializers import ProductSerializer
 
 @api_view(["GET"]) #you can specify the req methods you want the view to handle in here 
 def api_home(request,*args,**kwargs):
     """
     DRF API View
+    ---
+    data=ProductSerializer(instance/model_data).data
+      is cleaner & faster than 
+    data=model_to_dict(instance/model_data,fields=['id','title','sale_price'])
 
     """
-    model_data=Product.objects.all().order_by("?").first()
+   # model_data=Product.objects.all().order_by("?").first()
+
+   #using serializer to access model data
+    instance=Product.objects.all().order_by("?").first()
+
+
     data={}
-    if model_data:
+    if instance:
         #00.The hard way 
 
         # data['title'] =model_data.title
@@ -25,9 +35,13 @@ def api_home(request,*args,**kwargs):
 
         #01. clean way
         #the fields param allows you to specify what you want title,price both or all
-        data=model_to_dict(model_data,fields=['id','title'])
+        #data=model_to_dict(instance,fields=['id','title','sale_price'])
+
+        #03. using a serializer
+        data=ProductSerializer(instance).data
     #a http res
-    #return HttpResponse(json_data_str,headers={"content-type":"application/json"})
+    #ret # def get_discount(self):
+    #     return "122"urn HttpResponse(json_data_str,headers={"content-type":"application/json"})
     
     #json res
     #return JsonResponse(data)
