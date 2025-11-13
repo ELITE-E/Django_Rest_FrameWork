@@ -52,3 +52,24 @@ Data Validation: Provides a robust mechanism for validating incoming data, ensur
 API Control: Offers a flexible way to control the output format and content of your API responses.
 
 Reduced Boilerplate: ModelSerializer significantly reduces the amount of code needed for common serialization tasks.
+---
+Concider and understand:
+    The py_client sends the reqs -->which is handled in the views that at the same time imports Serializer(That knows the model architecrture to validate) --->ant the data is sent t the endpoint (server )--->Then the res is sent back for us to see 
+
+--------------------------------------------------
+Essence of Django REST Framework (DRF) Generic Views
+
+Generic views in DRF are prebuilt, reusable classes that handle the common CRUD operations (Create, Read, Update, Delete) so you don’t have to write the same boilerplate over and over.
+
+They’re built on top of Django’s class-based views (CBVs) and DRF’s mixins.
+
+| View class                     | Purpose                       |
+| ------------------------------ | ----------------------------- |
+| `ListAPIView`                  | Read (list) all objects       |
+| `RetrieveAPIView`              | Read a single object          |
+| `CreateAPIView`                | Create a new object           |
+| `UpdateAPIView`                | Update an existing object     |
+| `DestroyAPIView`               | Delete an object              |
+| `ListCreateAPIView`            | Combine list + create         |
+| `RetrieveUpdateDestroyAPIView` | Combine get + update + delete |
+
