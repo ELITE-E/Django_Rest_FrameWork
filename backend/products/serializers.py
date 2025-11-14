@@ -12,9 +12,16 @@ class ProductSerializer(serializers.ModelSerializer):
             'content',
             'price',
             'sale_price',
-            'my_discount',
+            #'my_discount',
         ]
 
         
     # def get_my_discount(self,obj):
     #         return obj.get_discount()
+#     A serializer converts:
+
+# Python objects / model instances → JSON (for API responses)
+
+# JSON data → Python objects / model instances (for API requests)
+
+# So it’s like a translator between the Django world and the API world.
