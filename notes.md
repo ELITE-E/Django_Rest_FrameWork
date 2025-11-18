@@ -73,3 +73,13 @@ They’re built on top of Django’s class-based views (CBVs) and DRF’s mixins
 | `ListCreateAPIView`            | Combine list + create         |
 | `RetrieveUpdateDestroyAPIView` | Combine get + update + delete |
 
+------------------------------------
+| Step  | What to Do                                      | What to Look For                                                          | Why It Matters                                                                               |
+| ----- | ----------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| **1** | **Go to the bottom first**                      | The final line (e.g., `TypeError: ...`)                                   | This is the actual error message explaining what went wrong.                                 |
+| **2** | **Scan upward until you see your project file** | Any file path **inside your project**, like: `/backend/products/views.py` | This is where *your code* triggered the error. Everything else above is framework internals. |
+| **3** | **Ignore Django/DRF internals**                 | Paths inside `site-packages/django/` or `rest_framework/`                 | These are not your code; they just show how the framework reached your function.             |
+| **4** | **Locate the exact line number**                | Example: `line 66, in product_alt_view`                                   | This tells you the exact line where the bug occurred.                                        |
+| **5** | **Inspect the line causing the error**          | Example: `obj = get_object_or_404(pk=pk)`                                 | Your mistake usually becomes obvious once you see the exact line.                            |
+| **6** | **Interpret the final error message**           | Example: `missing 1 required positional argument: 'klass'`                | The message explains what is missing, invalid, or misused.                                   |
+| **7** | **Fix the code at that location**               | Add missing arguments, correct syntax, handle missing objects, etc.       | The fix almost always happens in the file/line mentioned.                                    |
