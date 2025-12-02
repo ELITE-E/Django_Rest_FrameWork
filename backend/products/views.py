@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics,mixins
 
 from rest_framework.response import Response
 #from django.http import Http404
@@ -44,6 +44,61 @@ class  ProductListAPIView(generics.ListAPIView):
     serializer_class=ProductSerializer
 
 product_list_view=ProductListAPIView.as_view()
+
+#1.55-----> Creating the Updata and delete APIViews
+
+class ProductUpdateAPIView(generics.UpdateAPIView):
+
+    queryset=Product.objects.all()
+    serializer_class=ProductSerializer
+    lookupField='pk'
+
+    def perform_update(self,serializer):
+        instance = serializer.save()
+        if not instance.content:
+            instance.content=instance.title
+
+
+product_update_view=ProductUpdateAPIView.as_view()
+
+
+class ProductDeleteAPIView(generics.DestroyAPIView):
+    queryset=Product.objects.all()
+    serializer_class=ProductSerializer
+    lookup_field='pk'
+
+    def perform_destroy(self,instance):
+        super().perform_destroy(instance)
+
+product_delete_view=ProductDeleteAPIView.as_view()
+#2.05---->Mixins and Generic APIViews
+#mixins are reusable classes that provide the core logic for standard data operations 
+# (CRUD: Create, Retrieve, Update, Delete) in API views, significantly reducing boilerplate code. 
+    #Common DRF Mixins
+    #DRF provides several built-in mixins, each corresponding to a standard HTTP verb and data operation: 
+    #ListModelMixin: Handles GET requests to list a collection of records (e.g., fetching all products).
+    #CreateModelMixin: Handles POST requests to create a new record (e.g., adding a new user).
+    #RetrieveModelMixin: Handles GET requests to retrieve a single specific record using a lookup field (e.g., fetching a product by its ID).
+    #UpdateModelMixin: Handles PUT and PATCH requests to modify an existing record.
+    #DestroyModelMixin: Handles DELETE requests to remove a record. 
+class ProductMixinsView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,#Cares about pk
+    generics.GenericAPIView):
+
+    queryset=Product.objects.all()
+    serializer_class=ProductSerializer
+    lookup_field='pk'
+
+    def get(self,request,*args,**kwargs):
+        pk=kwargs.get('pk')
+        if pk is not None:
+            return  self.retreive(request,*args,**kwargs)
+        return self.list(request,*args,**kwargs)
+    
+
+product_mixin_view=ProductMixinsView.as_view()
+
 
 #1.44.36--->Using function based views for create ,retreive and list 
 
