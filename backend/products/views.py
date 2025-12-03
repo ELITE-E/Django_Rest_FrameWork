@@ -1,4 +1,4 @@
-from rest_framework import generics,mixins
+from rest_framework import generics,mixins,permissions,authentication
 
 from rest_framework.response import Response
 #from django.http import Http404
@@ -7,14 +7,40 @@ from django.shortcuts import get_object_or_404
 
 from .serializers import ProductSerializer
 from .models import Product
+from api.mixins import StaffEditorPermissionMixin#Importng the global permission in mixin format
+#from ..api.permissions import IsStaffEditorPermission
+from api.authentication import TokenAuthentication
 
 
-class ProductListCreateAPIView(generics.ListCreateAPIView):
+class ProductListCreateAPIView(generics.ListCreateAPIView,
+                               StaffEditorPermissionMixin #Accessing by a view 3.07---
+                               ):
     """
     A combination of List + crete api view 
     """
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
+    #2.30---->Custom permissions 
+    #permission_classes=[permissions.IsAdminUser,IsStaffEditorPermission]=Obsolete Because of 3.07..Global mixin
+
+
+    #2.16..--->Authentication& Permissions(Controlling what a user can/cant do)
+    #Can be used same in mixins&generics view
+
+
+    #3.01...-->(What default permissions& auths do we want in our prj.
+
+    # Doing as this for all views is very tedious and not cool )
+    #Thats where the default settings&permissions come in --->settings
+    #authentication_classes=[authentication.SessionAuthentication,
+                            #authentication.TokenAuthentication
+                            #TokenAuthentication]
+    #permission_classes=[permissions.IsAuthenticatedOrReadOnly]
+
+
+    #3.07--->From previous chapter ,we set default permissions.But for each view we have tho declare 
+    #a permission class.Thats where using mixins comes in 
+    #permission_classes-[permissions.IsAdminUser,IsStaffEditorPermission]
 
     def product_create(self,serializer):
         print(serializer.validated_data)
@@ -28,7 +54,8 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
 
 product_list_create_view=ProductListCreateAPIView.as_view()
 
-class  ProductDetailAPIView(generics.RetrieveAPIView):
+class  ProductDetailAPIView(generics.RetrieveAPIView,
+                            StaffEditorPermissionMixin):
 
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
@@ -36,7 +63,8 @@ class  ProductDetailAPIView(generics.RetrieveAPIView):
 
 product_detail_view=ProductDetailAPIView.as_view()
 
-class  ProductListAPIView(generics.ListAPIView):
+class  ProductListAPIView(generics.ListAPIView,
+                          StaffEditorPermissionMixin):
     """
     But we wont use it 
     """
@@ -47,7 +75,8 @@ product_list_view=ProductListAPIView.as_view()
 
 #1.55-----> Creating the Updata and delete APIViews
 
-class ProductUpdateAPIView(generics.UpdateAPIView):
+class ProductUpdateAPIView(generics.UpdateAPIView,
+                           StaffEditorPermissionMixin):
 
     queryset=Product.objects.all()
     serializer_class=ProductSerializer
