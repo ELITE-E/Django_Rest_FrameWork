@@ -51,6 +51,10 @@ class ProductListCreateAPIView(generics.ListCreateAPIView,
         price=serializer.validated_data.get('price')
         serializer.save(content=content)
 
+    def get_querryset(self,*args,**kwargs):
+        request=self.request
+        print(request.user)
+        return super().get_queryset(*args,**kwargs)
 
 product_list_create_view=ProductListCreateAPIView.as_view()
 
